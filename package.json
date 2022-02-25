@@ -1,0 +1,19 @@
+{
+  "name": "cypress_homework",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.7",
+    "mocha": "^9.2.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "cypress": "^9.5.0"
+  }
+}
