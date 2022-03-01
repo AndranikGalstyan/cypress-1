@@ -1,3 +1,8 @@
 {
-  "baseUrl": "https://demo.nopcommerce.com/"
+  "baseUrl": "https://demo.nopcommerce.com/",
+  "execTimeout": 5000 ,
+  "env": {
+    "baseUrl": "https://demo.nopcommerce.com/"
+
+  }
 }

@@ -1,48 +1,59 @@
-const { faker } = require('@faker-js/faker')
-let email = "tebapo1325@naluzotan.com"
-let password = "test1234"
-let invalidemail = "testgmail.com"
+import loginPage from "../pages/loginPage/loginPage"
+import VerificationResult from "../pages/verifications"
+import Functions from "../pages/functions"
 
+const verify = new VerificationResult();
+const functions = new Functions();
 
 
 // check login with valid data
-let suite = describe("login_page", () => {
+describe("login_page", () => {
     beforeEach(() => {
         cy.visit("/")
-        cy.location('protocol').should('eq', 'https:')
-        cy.title().should('eq', 'nopCommerce demo store')
-    })
+        verify.urlVerification(cy.url(), Cypress.env("baseUrl"))
+        verify.verifyProtocol('contains', 'https:')
+        verify.verifyTitle('contains', 'nopCommerce demo store')
+        // verify.visibilityVerification(loginpage.elements.loginIco())
+        // functions.clickOnWebElement(loginPage.elements.loginIco())
 
+    })
+    // check login with valid data
     it("login_with_valid_data", () => {
-        cy.get('.ico-login')
-            .should('be.visible')
-            .click()
-        cy.get("#Email")
-            .type(email)
-        cy.get("#Password")
-            .type(password)
-        cy.get(".button-1.login-button")
-            .click()
-        cy.get('.ico-logout')
-            .should("contain", 'Log out')
-            .click()
-        cy.get('.topic-block-title')
-            .should("contain", 'Welcome to our store')
-
+        functions.clickOnWebElement(loginPage.elements.loginIco())
+        functions.typeInField(loginPage.elements.emailInput(), loginPage.datas.email)
+        functions.typeInField(loginPage.elements.passwordInput(), loginPage.datas.password)
+        functions.clickOnWebElement(loginPage.elements.loginBtn())
+        verify.containingVerification(loginPage.elements.logoutBtn(), 'Log out')
+        functions.clickOnWebElement(loginPage.elements.logoutBtn())
+        verify.containingVerification(loginPage.elements.signInMessage(), 'Welcome, Please Sign In!')
     })
 
-     //check login with invlid data
-     it("login_with_invalid_data", () => {
-         cy.get('.ico-login')
-             .should('be.visible')
-             .click()
-         cy.get("#Email")
-             .type(invalidemail)
-         cy.get("#Password")
-             .type(password)
-         cy.get(".button-1.login-button")
-             .click()
-         cy.get('#Email-error')
-             .should("contain","Wrong email")
-     })
+    //check login with invlid data
+    it("login_with_invalid_data", () => {
+        loginPage.datas.invalidEmailArray.forEach((email, index) => {
+
+            functions.clickOnWebElement(loginPage.elements.loginIco())
+            functions.typeInField(loginPage.elements.emailInput(), email)
+            functions.typeInField(loginPage.elements.passwordInput(), loginPage.datas.password)
+            functions.clickOnWebElement(loginPage.elements.loginBtn())
+            if (index === 1) {
+                verify.containingVerification(loginPage.elements.loginErrorr(),
+                    "Login was unsuccessful. Please correct the errors and try again.",
+                    "No customer account found")
+            } else {
+                verify.containingVerification(loginPage.elements.emailError(), 'Wrong email')
+            }
+        })
+        })
 })
+
+
+
+
+
+
+
+
+
+
+
